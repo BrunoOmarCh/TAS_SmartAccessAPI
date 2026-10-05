@@ -1,0 +1,57 @@
+services:
+
+  resident-db:
+    image: postgres:16
+    container_name: smartaccess-resident-db
+    environment:
+      POSTGRES_DB: resident_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - resident_data:/var/lib/postgresql/data
+
+  access-db:
+    image: postgres:16
+    container_name: smartaccess-access-db
+    environment:
+      POSTGRES_DB: access_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5434:5432"
+    volumes:
+      - access_data:/var/lib/postgresql/data
+
+  resident-service:
+    build:
+      context: ./services/resident-service
+      dockerfile: Dockerfile
+    container_name: smartaccess-resident-service
+    depends_on:
+      - resident-db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://resident-db:5432/resident_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+    ports:
+      - "8081:8081"
+
+  access-service:
+    build:
+      context: ./services/access-service
+      dockerfile: Dockerfile
+    container_name: smartaccess-access-service
+    depends_on:
+      - access-db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://access-db:5432/access_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+    ports:
+      - "8082:8082"
+
+volumes:
+  resident_data:
+  access_data:
