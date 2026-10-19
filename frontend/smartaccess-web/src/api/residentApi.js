@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const residentApi = axios.create({
-    baseURL: "http://localhost:8081/api"
+    baseURL: "https://smartaccess-apim-carlos.azure-api.net/residents/api"
+    // Sin cabeceras estáticas aquí tampoco
 });
 
 export const getResidents = async () => {
@@ -20,11 +21,7 @@ export const createResident = async (resident) => {
 };
 
 export const updateResident = async (id, resident) => {
-    const response = await residentApi.put(
-        `/residents/${id}`,
-        resident
-    );
-
+    const response = await residentApi.put(`/residents/${id}`, resident);
     return response.data;
 };
 

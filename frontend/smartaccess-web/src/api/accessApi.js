@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const accessApi = axios.create({
-    baseURL: "http://localhost:8082/api"
+    baseURL: "https://smartaccess-apim-carlos.azure-api.net/access/api"
+    // Sin cabeceras estáticas aquí, el APIM se encargará de la pasarela de seguridad
 });
 
 export const getAccessRecords = async () => {
@@ -15,18 +16,11 @@ export const getAccessById = async (id) => {
 };
 
 export const getAccessByResident = async (residentId) => {
-    const response = await accessApi.get(
-        `/access/resident/${residentId}`
-    );
-
+    const response = await accessApi.get(`/access/resident/${residentId}`);
     return response.data;
 };
 
 export const createAccess = async (access) => {
-    const response = await accessApi.post(
-        "/access",
-        access
-    );
-
+    const response = await accessApi.post("/access", access);
     return response.data;
 };
